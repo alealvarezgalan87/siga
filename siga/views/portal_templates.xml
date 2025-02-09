@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Portal My Students -->
+    <template id="portal_my_students" name="My Students">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Estudiantes</t>
+            </t>
+            <t t-if="not students">
+                <div class="alert alert-warning mt8" role="alert">
+                    No hay estudiantes disponibles.
+                </div>
+            </t>
+            <t t-if="students" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Matrícula</th>
+                        <th>Nombre</th>
+                        <th>Grado</th>
+                        <th>Grupo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="students" t-as="student">
+                        <tr>
+                            <td>
+                                <a t-attf-href="/my/student/#{student.id}">
+                                    <t t-esc="student.registration_number"/>
+                                </a>
+                            </td>
+                            <td><t t-esc="student.name"/></td>
+                            <td><t t-esc="student.grade_level.name"/></td>
+                            <td><t t-esc="student.group_id.name"/></td>
+                            <td><t t-esc="student.state"/></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_layout_students" name="Portal layout: Students menu entry"
+              inherit_id="portal.portal_breadcrumbs" priority="30">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'student'" t-attf-class="breadcrumb-item #{'active ' if not student else ''}">
+                <a t-attf-href="/my/students" t-translate="yes"> Students</a>
+            </li>
+
+        </xpath>
+    </template>
+
+    <template id="portal_student_page" name="Student Details">
+        <t t-call="portal.portal_layout">
+            <t t-set="o_portal_fullwidth_alert" groups="portal.group_portal">
+                <t t-call="portal.portal_record_layout">
+                    <t t-set="card_header">
+                        <h5 class="mb-0">
+                            <small class="text-muted">Estudiante -</small>
+                            <span t-field="student.name"/>
+                        </h5>
+                    </t>
+                    <t t-set="card_body">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <strong>Matrícula:</strong>
+                                <span t-field="student.registration_number"/>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <strong>Estado:</strong>
+                                <span t-field="student.state"/>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-12 col-md-6">
+                                <strong>Grado:</strong>
+                                <span t-field="student.grade_level_id.name"/>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <strong>Grupo:</strong>
+                                <span t-field="student.group_id.name"/>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+
+            <!-- Asistencias -->
+            <div class="mt32">
+                <h3>Asistencias Recientes</h3>
+                <t t-if="not attendances">
+                    <div class="alert alert-info" role="status">
+                        No hay registros de asistencia disponibles.
+                    </div>
+                </t>
+                <t t-if="attendances" t-call="portal.portal_table">
+                    <thead>
+                        <tr class="active">
+                            <th>Fecha</th>
+                            <th>Curso</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="attendances" t-as="attendance">
+                            <tr>
+                                <td>
+                                    <t t-esc="attendance.date"/>
+                                </td>
+                                <td>
+                                    <t t-esc="attendance.course_id.name"/>
+                                </td>
+                                <td>
+                                   <t t-esc="attendance_states_display[attendance.id]"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+            </div>
+
+            <!-- Calificaciones -->
+            <div class="mt32">
+                <h3>Calificaciones</h3>
+                <t t-if="not grades">
+                    <div class="alert alert-info" role="status">
+                        No hay calificaciones disponibles.
+                    </div>
+                </t>
+                <t t-if="grades" t-call="portal.portal_table">
+                    <thead>
+                        <tr class="active">
+                            <th>Curso</th>
+                            <th>Periodo</th>
+                            <th>Calificación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="grades" t-as="grade">
+                            <tr>
+                                <td>
+                                    <t t-esc="grade.course_id.name"/>
+                                </td>
+                                <td>
+                                    <t t-esc="terms_display[grade.id]"/>
+                                </td>
+                                <td>
+                                    <t t-esc="grade.final_grade"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <!-- Agregar enlace en Mi Portal -->
+    <template id="portal_my_home_students_counter" name="Portal My Home : Students Counter"
+              inherit_id="portal.portal_my_home" priority="40">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <!-- Bloque para estudiantes -->
+            <t t-set="student_count" t-value="request.env['siga.student'].sudo().search_count([
+                '|',
+                ('user_id.partner_id', '=', request.env.user.partner_id.id),
+                ('parent_ids', 'in', [request.env.user.partner_id.id])
+            ])"/>
+            <t t-if="student_count">
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="title">Estudiantes</t>
+                    <t t-set="url" t-value="'/my/students'"/>
+                    <t t-set="count" t-value="student_count"/>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="website_home_with_dual_carousel" name="Website Home with Dual Carousel" inherit_id="website.homepage"
+              priority="40">
+        <xpath expr="//div[@id='wrap']" position="before">
+            <!-- Carrusel Principal (Banner) -->
+            <div id="mainCarousel" class="carousel slide mb-5" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="/siga/static/src/img/education-slide1.jpg" class="d-block w-100" alt="Banner 1"/>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Explora Nuevas Oportunidades</h5>
+                            <p>Descubre el poder de la educación con nosotros.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/siga/static/src/img/education-slide2.jpg" class="d-block w-100" alt="Banner 2"/>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Crece con Aprendizaje</h5>
+                            <p>Fomenta habilidades y conocimientos esenciales.</p>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#mainCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Anterior</span>
+                </a>
+                <a class="carousel-control-next" href="#mainCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Siguiente</span>
+                </a>
+            </div>
+
+            <!-- Sección Educativa con 4 Columnas Fijas -->
+            <section class="educational-section py-5">
+                <div class="container">
+                    <h2 class="text-center mb-4">Temas Educativos</h2>
+                    <div class="row">
+                        <!-- Columna 1 -->
+                        <div class="col-md-3 text-center">
+                            <img src="/siga/static/src/img/education1.jpg" alt="Tema 1"
+                                 class="img-fluid rounded-circle mb-3"/>
+                            <h5>Habilidades del Siglo XXI</h5>
+                            <p>Preparando a los estudiantes para el futuro.</p>
+                        </div>
+                        <!-- Columna 2 -->
+                        <div class="col-md-3 text-center">
+                            <img src="/siga/static/src/img/education2.jpg" alt="Tema 2"
+                                 class="img-fluid rounded-circle mb-3"/>
+                            <h5>Innovación y Creatividad</h5>
+                            <p>Fomentando la creatividad en el aprendizaje.</p>
+                        </div>
+                        <!-- Columna 3 -->
+                        <div class="col-md-3 text-center">
+                            <img src="/siga/static/src/img/education3.jpg" alt="Tema 3"
+                                 class="img-fluid rounded-circle mb-3"/>
+                            <h5>Trabajo en Equipo</h5>
+                            <p>Colaboración para un aprendizaje significativo.</p>
+                        </div>
+                        <!-- Columna 4 -->
+                        <div class="col-md-3 text-center">
+                            <img src="/siga/static/src/img/education4.jpg" alt="Tema 4"
+                                 class="img-fluid rounded-circle mb-3"/>
+                            <h5>Aprendizaje Personalizado</h5>
+                            <p>Adaptando la educación a las necesidades de cada estudiante.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </xpath>
+    </template>
+
+
+</odoo>

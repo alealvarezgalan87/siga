@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Secuencia para números de registro de estudiantes -->
+        <record id="seq_siga_student_registration" model="ir.sequence">
+            <field name="name">Secuencia de Registro de Estudiantes</field>
+            <field name="code">siga.student</field>
+            <field name="prefix">EST</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

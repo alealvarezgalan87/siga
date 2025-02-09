@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_siga_grade_level_tree" model="ir.ui.view">
+            <field name="name">siga.grade.level.tree</field>
+            <field name="model">siga.grade.level</field>
+            <field name="arch" type="xml">
+                <tree string="Grade Levels">
+                    <field name="sequence" widget="handle"/>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="student_ids" widget="many2many_tags"/>
+                    <field name="course_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_siga_grade_level_form" model="ir.ui.view">
+            <field name="name">siga.grade.level.form</field>
+            <field name="model">siga.grade.level</field>
+            <field name="arch" type="xml">
+                <form string="Grade Level">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="name"/>
+                                <field name="sequence"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Students">
+                                <field name="student_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="registration_number"/>
+                                        <field name="email"/>
+                                        <field name="phone"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Courses">
+                                <field name="course_ids">
+                                    <tree>
+                                        <field name="code"/>
+                                        <field name="name"/>
+                                        <field name="teacher_id"/>
+                                        <field name="credits"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_siga_grade_level_search" model="ir.ui.view">
+            <field name="name">siga.grade.level.search</field>
+            <field name="model">siga.grade.level</field>
+            <field name="arch" type="xml">
+                <search string="Search Grade Levels">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_siga_grade_level" model="ir.actions.act_window">
+            <field name="name">Grade Levels</field>
+            <field name="res_model">siga.grade.level</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_siga_grade_level_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first grade level!
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

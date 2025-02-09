@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_siga_class_schedule_tree" model="ir.ui.view">
+        <field name="name">siga.class.schedule.tree</field>
+        <field name="model">siga.class.schedule</field>
+        <field name="arch" type="xml">
+            <tree string="Class Schedules" decoration-success="state=='confirmed'" decoration-danger="state=='cancelled'" decoration-info="state=='draft'">
+                <field name="name"/>
+                <field name="course_id"/>
+                <field name="group_id"/>
+                <field name="teacher_id"/>
+                <field name="day_of_week"/>
+                <field name="start_time" widget="float_time"/>
+                <field name="end_time" widget="float_time"/>
+                <field name="duration" widget="float_time"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_siga_class_schedule_form" model="ir.ui.view">
+        <field name="name">siga.class.schedule.form</field>
+        <field name="model">siga.class.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Class Schedule">
+                <header>
+                    <button name="action_confirm" string="Confirmar" type="object" class="oe_highlight" states="draft"/>
+                    <button name="action_draft" string="Volver a Borrador" type="object" states="confirmed,cancelled"/>
+                    <button name="action_cancel" string="Cancelar" type="object" states="draft,confirmed"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Course Information">
+                            <field name="course_id"/>
+                            <field name="group_id"/>
+                            <field name="teacher_id"/>
+                        </group>
+                        <group string="Schedule">
+                            <field name="day_of_week"/>
+                            <field name="start_time" widget="float_time"/>
+                            <field name="end_time" widget="float_time"/>
+                            <field name="duration" widget="float_time" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_siga_class_schedule_search" model="ir.ui.view">
+        <field name="name">siga.class.schedule.search</field>
+        <field name="model">siga.class.schedule</field>
+        <field name="arch" type="xml">
+            <search string="Search Class Schedule">
+                <field name="name"/>
+                <field name="course_id"/>
+                <field name="teacher_id"/>
+                <field name="group_id"/>
+                <field name="day_of_week"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state','=','cancelled')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Course" name="group_by_course" context="{'group_by':'course_id'}"/>
+                    <filter string="Teacher" name="group_by_teacher" context="{'group_by':'teacher_id'}"/>
+                    <filter string="Group" name="group_by_group" context="{'group_by':'group_id'}"/>
+                    <filter string="Day" name="group_by_day" context="{'group_by':'day_of_week'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Calendar View -->
+    <record id="view_siga_class_schedule_calendar" model="ir.ui.view">
+        <field name="name">siga.class.schedule.calendar</field>
+        <field name="model">siga.class.schedule</field>
+        <field name="arch" type="xml">
+            <calendar string="Class Schedule" date_start="start_time" date_stop="end_time" color="course_id" mode="week">
+                <field name="name"/>
+                <field name="course_id"/>
+                <field name="teacher_id"/>
+                <field name="group_id"/>
+                <field name="duration" widget="float_time"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_siga_class_schedule" model="ir.actions.act_window">
+        <field name="name">Class Schedules</field>
+        <field name="res_model">siga.class.schedule</field>
+        <field name="view_mode">tree,form,calendar,search</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first class schedule!
+            </p>
+        </field>
+    </record>
+</odoo>

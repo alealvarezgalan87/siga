@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menú Principal -->
+    <menuitem id="menu_siga_root"
+              name="SIGA"
+              web_icon="siga,static/description/icon.png"
+              sequence="10"/>
+
+    <!-- Submenús -->
+    <menuitem id="menu_siga_academic"
+              name="Académico"
+              parent="menu_siga_root"
+              sequence="10"/>
+
+    <menuitem id="menu_siga_configuration"
+              name="Configuración"
+              parent="menu_siga_root"
+              sequence="100"/>
+
+    <!-- Submenús Académicos -->
+    <menuitem id="menu_siga_student"
+              name="Estudiantes"
+              parent="menu_siga_academic"
+              action="action_siga_student"
+              sequence="10"/>
+
+    <menuitem id="menu_siga_teacher"
+              name="Profesores"
+              parent="menu_siga_academic"
+              action="action_siga_teacher"
+              sequence="20"/>
+
+    <menuitem id="menu_siga_course"
+              name="Cursos"
+              parent="menu_siga_academic"
+              action="action_siga_course"
+              sequence="30"/>
+
+    <menuitem id="menu_siga_grade"
+              name="Calificaciones"
+              parent="menu_siga_academic"
+              action="action_siga_grade"
+              sequence="40"/>
+
+    <menuitem id="menu_siga_attendance"
+              name="Asistencia"
+              parent="menu_siga_academic"
+              action="action_siga_attendance"
+              sequence="50"/>
+
+    <menuitem id="menu_siga_schedule"
+              name="Horarios"
+              parent="menu_siga_academic"
+              action="action_siga_class_schedule"
+              sequence="25"/>
+
+    <!-- Submenús de Configuración -->
+    <menuitem id="menu_siga_grade_level"
+              name="Niveles de Grado"
+              parent="menu_siga_configuration"
+              action="action_siga_grade_level"
+              sequence="10"/>
+
+    <menuitem id="menu_siga_student_group"
+              name="Grupos de Estudiantes"
+              parent="menu_siga_configuration"
+              action="action_siga_student_group"
+              sequence="20"/>
+</odoo>

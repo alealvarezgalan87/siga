@@ -1,0 +1,35 @@
+#mainCarousel .carousel-inner {
+    max-height: 600px; /* Ajusta la altura máxima aquí */
+    overflow: hidden;
+}
+
+#mainCarousel .carousel-inner img {
+    object-fit: cover; /* Asegura que las imágenes se recorten correctamente */
+    height: 100%;
+    width: 100%;
+}
+
+.educational-section img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    transition: transform 0.3s ease-in-out;
+}
+
+.educational-section img:hover {
+    transform: scale(1.1);
+}
+
+.educational-section h5 {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    color: #333;
+    font-weight: bold;
+}
+
+.educational-section p {
+    font-size: 1rem;
+    color: #666;
+    margin: 0.5rem 0 0;
+}

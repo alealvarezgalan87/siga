@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_siga_student_group_tree" model="ir.ui.view">
+            <field name="name">siga.student.group.tree</field>
+            <field name="model">siga.student.group</field>
+            <field name="arch" type="xml">
+                <tree string="Student Groups">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="grade_level_id"/>
+                    <field name="academic_year"/>
+                    <field name="student_count"/>
+                    <field name="schedule_count"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_siga_student_group_form" model="ir.ui.view">
+            <field name="name">siga.student.group.form</field>
+            <field name="model">siga.student.group</field>
+            <field name="arch" type="xml">
+                <form string="Student Group">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="name"/>
+                                <field name="grade_level_id"/>
+                                <field name="academic_year"/>
+                            </group>
+                            <group>
+                                <field name="student_count"/>
+                                <field name="schedule_count"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Students">
+                                <field name="student_ids">
+                                    <tree>
+                                        <field name="registration_number"/>
+                                        <field name="name"/>
+                                        <field name="email"/>
+                                        <field name="phone"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Class Schedule">
+                                <field name="schedule_ids">
+                                    <tree>
+                                        <field name="course_id"/>
+                                        <field name="teacher_id"/>
+                                        <field name="day_of_week"/>
+                                        <field name="start_time" widget="float_time"/>
+                                        <field name="end_time" widget="float_time"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_siga_student_group_search" model="ir.ui.view">
+            <field name="name">siga.student.group.search</field>
+            <field name="model">siga.student.group</field>
+            <field name="arch" type="xml">
+                <search string="Search Student Groups">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="grade_level_id"/>
+                    <field name="academic_year"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Grade Level" name="grade_level" context="{'group_by': 'grade_level_id'}"/>
+                        <filter string="Academic Year" name="academic_year" context="{'group_by': 'academic_year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_siga_student_group" model="ir.actions.act_window">
+            <field name="name">Student Groups</field>
+            <field name="res_model">siga.student.group</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_siga_student_group_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first student group!
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

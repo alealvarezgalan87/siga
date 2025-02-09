@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Plantilla de correo para acceso al portal -->
+        <record id="email_template_student_portal_access" model="mail.template">
+            <field name="name">Portal: Acceso Estudiante</field>
+            <field name="model_id" ref="model_siga_student"/>
+            <field name="subject">Acceso al Portal Académico</field>
+            <field name="email_from">{{ user.company_id.email }}</field>
+            <field name="email_to">{{ object.partner_id.email }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Estimado/a <t t-out="object.name"/>,
+                        <br/><br/>
+                        Se ha creado una cuenta en el Portal Académico para ti.
+                        <br/>
+                        Puedes acceder a tu información académica usando las siguientes credenciales:
+                        <br/><br/>
+                        Portal: <t t-out="user.company_id.website"/>
+                        <br/>
+                        Usuario: <t t-out="object.partner_id.email"/>
+                        <br/>
+                        Contraseña: Se enviará en un correo separado
+                        <br/><br/>
+                        Saludos cordiales,
+                        <br/>
+                        <t t-out="user.company_id.name"/>
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Menú del Portal -->
+<!--        <record id="menu_portal_students" model="website.menu">-->
+<!--            <field name="name">Estudiantes</field>-->
+<!--            <field name="url">/my/students</field>-->
+<!--            <field name="parent_id" ref="website.main_menu"/>-->
+<!--            <field name="sequence" type="int">50</field>-->
+<!--        </record>-->
+
+        <!-- Plantilla de correo para acceso de padres al portal -->
+        <record id="email_template_parent_portal_access" model="mail.template">
+            <field name="name">Portal: Acceso Padre/Tutor</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="subject">Acceso al Portal Académico - Padre/Tutor</field>
+            <field name="email_from">{{ user.company_id.email }}</field>
+            <field name="email_to">{{ object.email }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Estimado/a <t t-out="object.name"/>,
+                        <br/><br/>
+                        Se ha creado una cuenta en el Portal Académico para que pueda dar seguimiento al progreso académico de su hijo/a.
+                        <br/>
+                        Puede acceder a la información usando las siguientes credenciales:
+                        <br/><br/>
+                        Portal: <t t-out="user.company_id.website"/>
+                        <br/>
+                        Usuario: <t t-out="object.email"/>
+                        <br/>
+                        Contraseña: Se enviará en un correo separado
+                        <br/><br/>
+                        Saludos cordiales,
+                        <br/>
+                        <t t-out="user.company_id.name"/>
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_siga_course_tree" model="ir.ui.view">
+        <field name="name">siga.course.tree</field>
+        <field name="model">siga.course</field>
+        <field name="arch" type="xml">
+            <tree string="Courses">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="teacher_id"/>
+                <field name="credits"/>
+                <field name="grade_level_id"/>
+                <field name="total_students"/>
+                <field name="average_grade"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_siga_course_form" model="ir.ui.view">
+        <field name="name">siga.course.form</field>
+        <field name="model">siga.course</field>
+        <field name="arch" type="xml">
+            <form string="Course">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="code" placeholder="Course Code"/>
+                        </h1>
+                        <h2>
+                            <field name="name" placeholder="Course Name"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="teacher_id"/>
+                            <field name="credits"/>
+                            <field name="grade_level_id"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="total_students"/>
+                            <field name="average_grade"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Students">
+                            <field name="student_ids">
+                                <tree>
+                                    <field name="registration_number"/>
+                                    <field name="name"/>
+                                    <field name="grade_level"/>
+                                    <field name="section"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Schedule">
+                            <field name="schedule_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_siga_course_search" model="ir.ui.view">
+        <field name="name">siga.course.search</field>
+        <field name="model">siga.course</field>
+        <field name="arch" type="xml">
+            <search string="Search Courses">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="teacher_id"/>
+                <field name="grade_level_id"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Teacher" name="teacher" context="{'group_by': 'teacher_id'}"/>
+                    <filter string="Grade Level" name="grade_level" context="{'group_by': 'grade_level_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_siga_course" model="ir.actions.act_window">
+        <field name="name">Cursos</field>
+        <field name="res_model">siga.course</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡Crea tu primer curso!
+            </p>
+        </field>
+    </record>
+</odoo>

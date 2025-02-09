@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_siga_attendance_tree" model="ir.ui.view">
+        <field name="name">siga.attendance.tree</field>
+        <field name="model">siga.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="Attendance Records" decoration-success="state=='present'" decoration-warning="state=='late'" decoration-danger="state=='absent'" decoration-info="state=='excused'">
+                <field name="date"/>
+                <field name="student_id"/>
+                <field name="schedule_id"/>
+                <field name="course_id"/>
+                <field name="group_id"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="minutes_late"/>
+                <field name="minutes_early"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_siga_attendance_form" model="ir.ui.view">
+        <field name="name">siga.attendance.form</field>
+        <field name="model">siga.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Attendance Record">
+                <sheet>
+                    <group>
+                        <group string="Student Information">
+                            <field name="student_id"/>
+                            <field name="student_group_id" invisible="1"/>
+                            <field name="schedule_id"/>
+                            <field name="course_id"/>
+                            <field name="group_id"/>
+                        </group>
+                        <group string="Attendance Details">
+                            <field name="date"/>
+                            <field name="day_of_week"/>
+                            <field name="state"/>
+                            <field name="attendance_percentage" widget="percentage"/>
+                        </group>
+                        <group string="Time Information">
+                            <field name="expected_start" widget="float_time"/>
+                            <field name="expected_end" widget="float_time"/>
+                            <field name="check_in"/>
+                            <field name="check_out"/>
+                            <field name="minutes_late"/>
+                            <field name="minutes_early"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Remarks">
+                            <field name="remarks"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_siga_attendance_search" model="ir.ui.view">
+        <field name="name">siga.attendance.search</field>
+        <field name="model">siga.attendance</field>
+        <field name="arch" type="xml">
+            <search string="Search Attendance">
+                <field name="student_id"/>
+                <field name="schedule_id"/>
+                <field name="course_id"/>
+                <field name="group_id"/>
+                <field name="date"/>
+                <field name="state"/>
+                <separator/>
+                <filter string="Present" name="present" domain="[('state', '=', 'present')]"/>
+                <filter string="Absent" name="absent" domain="[('state', '=', 'absent')]"/>
+                <filter string="Late" name="late" domain="[('state', '=', 'late')]"/>
+                <filter string="Excused" name="excused" domain="[('state', '=', 'excused')]"/>
+                <separator/>
+                <filter string="Today" name="today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="This Week" name="this_week" domain="[('date', '>=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Student" name="student" context="{'group_by': 'student_id'}"/>
+                    <filter string="Schedule" name="schedule" context="{'group_by': 'schedule_id'}"/>
+                    <filter string="Course" name="course" context="{'group_by': 'course_id'}"/>
+                    <filter string="Group" name="group" context="{'group_by': 'group_id'}"/>
+                    <filter string="Status" name="status" context="{'group_by': 'state'}"/>
+                    <filter string="Date" name="date" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Calendar View -->
+    <record id="view_siga_attendance_calendar" model="ir.ui.view">
+        <field name="name">siga.attendance.calendar</field>
+        <field name="model">siga.attendance</field>
+        <field name="arch" type="xml">
+            <calendar string="Attendance Calendar" date_start="date" color="student_id" mode="week" quick_add="false">
+                <field name="student_id"/>
+                <field name="schedule_id"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Pivot View -->
+    <record id="view_siga_attendance_pivot" model="ir.ui.view">
+        <field name="name">siga.attendance.pivot</field>
+        <field name="model">siga.attendance</field>
+        <field name="arch" type="xml">
+            <pivot string="Attendance Analysis">
+                <field name="date" type="row"/>
+                <field name="student_id" type="row"/>
+                <field name="schedule_id" type="col"/>
+                <field name="course_id" type="col"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_siga_attendance" model="ir.actions.act_window">
+        <field name="name">Attendance</field>
+        <field name="res_model">siga.attendance</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{'search_default_today': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first attendance record!
+            </p>
+        </field>
+    </record>
+</odoo>
